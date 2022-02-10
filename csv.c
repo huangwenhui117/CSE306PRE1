@@ -2,42 +2,42 @@
 
 int main(int argc, char *argv[]) {
 
-   	
+   	// wenhui
     
     return 0;
 }
 
-// -f
+// -f haonao
 int num_columns() {
 	return 0;
 }
 
-// -r
+// -r jiaqian
 int num_rows() {
 	return 0;
 }
 
-// -h
+// -h jingjing
 int check_header() {
 	return 0;
 }
 
-// max
+// max wenhui
 int max_data() {
 	return 0;
 }
 
-// min
+// min jiaqian
 int min_data() {
 	return 0;
 }
 
-// mean
+// mean haonan
 int mean_data() {
 	return 0;
 }
 
-// records
+// records jingjing
 int find_data() {
 
 }
