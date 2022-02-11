@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
  	 **/
  	int header = 1;
  	int columns = num_columns(pointer);
- 	char *header_value;
+ 	char *header_values;
  	for (int i = 1; i < argc - 1; i++) {
  		if (argument_checker(argv[i]) == 0) {
  			exit(EXIT_FAILURE);
@@ -51,22 +51,39 @@ int main(int argc, char *argv[]) {
  			printf("%d", rows);
  			continue;
  		}
+ 		int index_column;
  		if (argument_checker(argv[i]) == 4) {
  			i += 1;
- 			int index_column = index_columnName();
+ 			index_column = index_columnName(header_values, header, argv[i]);
+ 			if (index_column == -1) {
+ 				exit(EXIT_FAILURE);
+ 			}
  			continue;
  		}
  		if (argument_checker(argv[i]) == 5) {
- 			
+ 			i += 1;
+ 			index_column = index_columnName(header_values, header, argv[i]);
+ 			if (index_column == -1) {
+ 				exit(EXIT_FAILURE);
+ 			}
  			continue;
  		}
  		if (argument_checker(argv[i]) == 6) {
- 			
+ 			i += 1;
+ 			index_column = index_columnName(header_values, header, argv[i]);
+ 			if (index_column == -1) {
+ 				exit(EXIT_FAILURE);
+ 			}
  			continue;
  		}
  		if (argument_checker(argv[i]) == 7) {
- 			
- 			continue;
+ 			i += 1;
+ 			index_column = index_columnName(header_values, header, argv[i]);
+ 			if (index_column == -1) {
+ 				exit(EXIT_FAILURE);
+ 			}
+ 			i += 1;
+
  		}
  	}
 
@@ -139,7 +156,7 @@ int argument_checker(char *argv) {
 	return 0;
 }
 
-int index_columnName(char* pointer, int exist_header, char* indexValue) {
+int index_columnName(char* nameArray, int exist_header, char* indexValue) {
 	return 0;
 } 
 
@@ -154,23 +171,23 @@ int num_rows(void* pointer) {
 }
 
 // max jingjing
-int max_data() {
+int max_data(void* pointer, int index_column) {
 	return 0;
 }
 
 // min jiaqian
-int min_data() {
+int min_data(void* pointer, int index_column) {
 	return 0;
 }
 
 // mean haonan
-int mean_data() {
-	return 0;
+double mean_data(void* pointer, int index_column) {
+	return 0.0;
 }
 
 // records jingjing
-int find_data() {
-	return 0;
+char* find_data(void* pointer, int index_column, char* target) {
+	return NULL;
 }
 
 
