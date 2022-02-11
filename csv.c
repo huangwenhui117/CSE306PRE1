@@ -5,6 +5,7 @@
 int num_columns(void* pointer);
 int num_rows(void* pointer);
 int argument_checker(char *argv);
+int index_columnName(char* pointer, int exist_header, char* indexValue);
 
 int main(int argc, char *argv[]) {
 
@@ -28,32 +29,46 @@ int main(int argc, char *argv[]) {
  	/**
  	 * -h
  	 * if header != 0, not include header;
- 	 * else, not include header;
+ 	 * else, include header;
  	 **/
  	int header = 1;
+ 	int columns = num_columns(pointer);
+ 	char *header_value;
  	for (int i = 1; i < argc - 1; i++) {
- 		if () {
-
+ 		if (argument_checker(argv[i]) == 0) {
+ 			exit(EXIT_FAILURE);
  		}
- 	}
- 	if (header != 0) {
- 		first_argument[1] = 'f';
- 		// call -f
- 		if (strcmp(first_argument, argv[0]) == 0) {
- 			int columns = num_columns(pointer);
+ 		if (argument_checker(argv[i]) == 1) {
+ 			header = 0;
+ 			continue;
  		}
- 		// call -r
- 		first_argument[1] = 'r';
- 		if (strcmp(first_argument, argv[0]) == 0) {
+ 		if (argument_checker(argv[i]) == 2) {
+ 			printf("%d", columns);
+ 			continue;
+ 		}
+ 		if (argument_checker(argv[i]) == 3) {
  			int rows = num_rows(pointer);
- 			if (header == 0) {
- 				printf("%d", rows - 1);
- 			} else {
- 				printf("%d", rows);
- 			}
+ 			printf("%d", rows);
+ 			continue;
+ 		}
+ 		if (argument_checker(argv[i]) == 4) {
+ 			i += 1;
+ 			int index_column = index_columnName();
+ 			continue;
+ 		}
+ 		if (argument_checker(argv[i]) == 5) {
+ 			
+ 			continue;
+ 		}
+ 		if (argument_checker(argv[i]) == 6) {
+ 			
+ 			continue;
+ 		}
+ 		if (argument_checker(argv[i]) == 7) {
+ 			
+ 			continue;
  		}
  	}
- 	
 
  	int len = 0;
  	while (*(char *)pointer != ',') {
@@ -83,12 +98,10 @@ int main(int argc, char *argv[]) {
  **/ 
 int argument_checker(char *argv) {
 	char argument[9] = {'-','h','\0','\0','\0','\0','\0','\0','\0'};
-	// check if -h
 	if (strcmp(argument, argv) == 0) {
 		return 1;
 	}
 	argument[1] = 'f';
-	// check if -f
 	if (strcmp(argument, argv) == 0) {
 		return 2;
 	}
@@ -126,6 +139,10 @@ int argument_checker(char *argv) {
 	return 0;
 }
 
+int index_columnName(char* pointer, int exist_header, char* indexValue) {
+	return 0;
+} 
+
 // -f haonao
 int num_columns(void* pointer) {
 	return 0;
@@ -136,7 +153,7 @@ int num_rows(void* pointer) {
 	return 0;
 }
 
-// max wenhui
+// max jingjing
 int max_data() {
 	return 0;
 }
