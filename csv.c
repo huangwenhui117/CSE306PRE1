@@ -6,6 +6,11 @@ int num_columns(void* pointer);
 int num_rows(void* pointer);
 int argument_checker(char *argv);
 int index_columnName(char* pointer, int exist_header, char* indexValue);
+int max_data(void* pointer, int index_column);
+int min_data(void* pointer, int index_column);
+double mean_data(void* pointer, int index_column);
+char* find_data(void* pointer, int index_column, char* target);
+
 
 int main(int argc, char *argv[]) {
 
@@ -40,6 +45,13 @@ int main(int argc, char *argv[]) {
  		}
  		if (argument_checker(argv[i]) == 1) {
  			header = 0;
+ 			int len = 0;
+		 	while (*(char *)pointer != '\n') {
+		 		len += 1;
+		 		pointer += 1;
+		 	}
+		 	header_values = pointer - len;
+		 	pointer += 1;
  			continue;
  		}
  		if (argument_checker(argv[i]) == 2) {
@@ -58,6 +70,8 @@ int main(int argc, char *argv[]) {
  			if (index_column == -1) {
  				exit(EXIT_FAILURE);
  			}
+ 			int max = max_data(pointer, index_column);
+ 			printf("%d", max);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 5) {
@@ -66,6 +80,8 @@ int main(int argc, char *argv[]) {
  			if (index_column == -1) {
  				exit(EXIT_FAILURE);
  			}
+ 			int min = min_data(pointer, index_column);
+ 			printf("%d", min);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 6) {
@@ -74,6 +90,8 @@ int main(int argc, char *argv[]) {
  			if (index_column == -1) {
  				exit(EXIT_FAILURE);
  			}
+ 			double mean = mean_data(pointer, index_column);
+ 			printf("%f", mean);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 7) {
@@ -83,23 +101,24 @@ int main(int argc, char *argv[]) {
  				exit(EXIT_FAILURE);
  			}
  			i += 1;
-
+ 			char* target = find_data(pointer, index_column, argv[i]);
+ 			put(target);
  		}
  	}
 
- 	int len = 0;
- 	while (*(char *)pointer != ',') {
- 		len += 1;
- 		pointer += 1;
- 	}
+ 	// int len = 0;
+ 	// while (*(char *)pointer != ',') {
+ 	// 	len += 1;
+ 	// 	pointer += 1;
+ 	// }
 
- 	char *str = malloc(len);
- 	memcpy(str, pointer - len, len);
- 	puts(str);
+ 	// char *str = malloc(len);
+ 	// memcpy(str, pointer - len, len);
+ 	// puts(str);
 
  	printf("%d\n", 1);
 
-    return 1;
+    exit(EXIT_SUCCESS);
 }
 
 /** 
