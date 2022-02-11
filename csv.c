@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+int check_header(char* argv);
+
 int main(int argc, char *argv[]) {
 
    	// wenhui
@@ -13,22 +15,31 @@ int main(int argc, char *argv[]) {
     	return 0;
  	}
     printf("file name: %s\n", argv[argc - 1]);
- 	fseek(inFile, 0, SEEK_END); // put the postion at the end
- 	int size_file = ftell(inFile);
- 	printf("file size: %d\n", size_file); 
- 	char buffer[100];
- 	// fscanf(inFile, "%s", buffer);
- 	// printf("%s", buffer);
 
- 	while (fgets(buffer, sizeof(buffer), inFile)) {
- 		char *token;
- 		token = strtok(buffer, ",");
- 		while (token != NULL) {
- 			printf("%s", token);
- 			token = strtok(NULL, ",");
- 		}
- 		printf("\n");
+    //Read file and assign to pointer
+ 	fseek(inFile, 0, SEEK_END); 
+ 	int size_file = ftell(inFile);
+ 	printf("size of file is %d\n", size_file);
+ 	rewind(inFile); 
+ 	void* pointer = malloc(size_file);
+ 	fread(pointer, sizeof(char), size_file, inFile);
+
+ 	int header = check_header(argv[1]);
+ 	if (header == 0) {
+ 		printf("This csv file include header.\n");
+ 	} else {
+ 		printf("This csv file doesn't include header.\n");
  	}
+
+ 	int len = 0;
+ 	while (*(char *)pointer != ',') {
+ 		len += 1;
+ 		pointer += 1;
+ 	}
+
+ 	char *str = malloc(len);
+ 	memcpy(str, pointer - len, len);
+ 	puts(str);
 
  	printf("%d\n", 1);
 
@@ -38,7 +49,7 @@ int main(int argc, char *argv[]) {
 
 
 // -f haonao
-int num_columns() {
+int num_columns(void* pointer) {
 	return 0;
 }
 
@@ -48,8 +59,9 @@ int num_rows() {
 }
 
 // -h jingjing
-int check_header() {
-	return 0;
+int check_header(char* argv) {
+	char module[3] = {'-', 'h', '\0'};
+	return strcmp(module, argv);
 }
 
 // max wenhui
