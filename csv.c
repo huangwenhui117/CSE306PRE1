@@ -24,12 +24,10 @@ int main(int argc, char *argv[]) {
  	void* pointer = malloc(size_file);
  	fread(pointer, sizeof(char), size_file, inFile);
 
- 	int header = check_header(argv[1]);
- 	if (header == 0) {
- 		printf("This csv file include header.\n");
- 	} else {
- 		printf("This csv file doesn't include header.\n");
- 	}
+
+ 	char first_argument[3] = {'-', 'h', '\0'};
+ 	int header = strcmp(module, argv);
+ 	
 
  	int len = 0;
  	while (*(char *)pointer != ',') {
@@ -56,12 +54,6 @@ int num_columns(void* pointer) {
 // -r jiaqian
 int num_rows() {
 	return 0;
-}
-
-// -h jingjing
-int check_header(char* argv) {
-	char module[3] = {'-', 'h', '\0'};
-	return strcmp(module, argv);
 }
 
 // max wenhui
