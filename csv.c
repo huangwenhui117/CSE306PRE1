@@ -3,9 +3,18 @@
 int main(int argc, char *argv[]) {
 
    	// wenhui
-    
+   	FILE * inFile = NULL;
+
+  	printf("argc: %d\n",argc);
+    inFile = fopen(argv[argc - 1], "r");  // open file for reading
+  	if (inFile == NULL) {
+    	exit(EXIT_FAILURE);
+ 	}
+ 
     return 0;
 }
+
+
 
 // -f haonao
 int num_columns() {
@@ -39,7 +48,7 @@ int mean_data() {
 
 // records jingjing
 int find_data() {
-
+	return 0;
 }
 
 
