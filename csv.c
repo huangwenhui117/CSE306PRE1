@@ -10,7 +10,7 @@ int max_data(void* pointer, int index_column);
 int min_data(void* pointer, int index_column);
 double mean_data(void* pointer, int index_column);
 char* find_data(void* pointer, int index_column, char* target);
-
+int str_cmp(char* str1, char* str2);
 
 int main(int argc, char *argv[]) {
 
@@ -21,12 +21,10 @@ int main(int argc, char *argv[]) {
   	if (inFile == NULL) {
     	return 0;
  	}
-    printf("file name: %s\n", argv[argc - 1]);
 
     //Read file and assign to pointer
  	fseek(inFile, 0, SEEK_END); 
  	int size_file = ftell(inFile);
- 	printf("size of file is %d\n", size_file);
  	rewind(inFile); 
  	void* pointer = malloc(size_file);
  	fread(pointer, sizeof(char), size_file, inFile);
@@ -50,8 +48,16 @@ int main(int argc, char *argv[]) {
 		 		len += 1;
 		 		pointer += 1;
 		 	}
-		 	header_values = pointer - len;
+		 	*(char *)pointer = '\0';
+		 	header_values = malloc(len + 1);
+		 	strcpy(header_values, (pointer - len));
 		 	pointer += 1;
+		 	// test
+		 	char indexValue[50];
+			memset(indexValue, '\0', 50);
+			strcpy(indexValue, argv[i + 1]);
+		 	int i = index_columnName(header_values, 0, indexValue);
+		 	printf("index is %d\n", i);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 2) {
@@ -66,7 +72,10 @@ int main(int argc, char *argv[]) {
  		int index_column;
  		if (argument_checker(argv[i]) == 4) {
  			i += 1;
- 			index_column = index_columnName(header_values, header, argv[i]);
+ 			char indexValue[50];
+			memset(indexValue, '\0', 50);
+			strcpy(indexValue, argv[i]);
+		 	index_column = index_columnName(header_values, header, indexValue);
  			if (index_column == -1) {
  				exit(EXIT_FAILURE);
  			}
@@ -76,7 +85,10 @@ int main(int argc, char *argv[]) {
  		}
  		if (argument_checker(argv[i]) == 5) {
  			i += 1;
- 			index_column = index_columnName(header_values, header, argv[i]);
+ 			char indexValue[50];
+			memset(indexValue, '\0', 50);
+			strcpy(indexValue, argv[i]);
+		 	index_column = index_columnName(header_values, header, indexValue);
  			if (index_column == -1) {
  				exit(EXIT_FAILURE);
  			}
@@ -86,7 +98,10 @@ int main(int argc, char *argv[]) {
  		}
  		if (argument_checker(argv[i]) == 6) {
  			i += 1;
- 			index_column = index_columnName(header_values, header, argv[i]);
+ 			char indexValue[50];
+			memset(indexValue, '\0', 50);
+			strcpy(indexValue, argv[i]);
+		 	index_column = index_columnName(header_values, header, indexValue);
  			if (index_column == -1) {
  				exit(EXIT_FAILURE);
  			}
@@ -96,13 +111,16 @@ int main(int argc, char *argv[]) {
  		}
  		if (argument_checker(argv[i]) == 7) {
  			i += 1;
- 			index_column = index_columnName(header_values, header, argv[i]);
+ 			char indexValue[50];
+			memset(indexValue, '\0', 50);
+			strcpy(indexValue, argv[i]);
+		 	index_column = index_columnName(header_values, header, indexValue);
  			if (index_column == -1) {
  				exit(EXIT_FAILURE);
  			}
  			i += 1;
  			char* target = find_data(pointer, index_column, argv[i]);
- 			put(target);
+ 			printf("%s", target);
  		}
  	}
 
@@ -115,8 +133,7 @@ int main(int argc, char *argv[]) {
  	// char *str = malloc(len);
  	// memcpy(str, pointer - len, len);
  	// puts(str);
-
- 	printf("%d\n", 1);
+ 	
 
     exit(EXIT_SUCCESS);
 }
@@ -175,9 +192,46 @@ int argument_checker(char *argv) {
 	return 0;
 }
 
-int index_columnName(char* nameArray, int exist_header, char* indexValue) {
-	return 0;
+int index_columnName(char* nameArray, int exist_header, char* indexValue) { 
+	int size_indexValue = strlen(indexValue);
+	if (size_indexValue == 1 && *indexValue == '0') {
+		return 0;
+	} else {
+		int value = atoi(indexValue);
+		if (value > 0) {
+			return value;
+		} else if (value < 0) {
+			return -1;
+		} else {
+			if (exist_header == 1) // header doesn't exist.
+				return -1;
+			else {
+				char *token = strtok(nameArray, ",");
+				char str[50];
+				memset(str, '\0', 50);
+				strcpy(str, token);
+				// here has a bug. When the index value is the last column name.
+				// and it doesn't return correct index value
+				while (token != NULL) {
+					// printf("str is %s\n", str);
+					// printf("indexValue is %s\n", indexValue);
+					// printf("%d\n", strcmp(str, indexValue));
+					if (strcmp(str, indexValue) == 0) {
+						return value;
+					}
+					memset(str, '\0', 50);
+					token = strtok(NULL, ",");
+					if (token != NULL) strcpy(str, token);
+					value++;
+					// printf("%d\n", value);
+				}
+			}
+		}
+	}
+	return -1;
 } 
+
+
 
 // -f haonao
 int num_columns(void* pointer) {
