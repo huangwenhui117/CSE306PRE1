@@ -48,9 +48,10 @@ int main(int argc, char *argv[]) {
 		 		len += 1;
 		 		pointer += 1;
 		 	}
-		 	*(char *)pointer = '\0';
-		 	header_values = malloc(len + 1);
+		 	//*(char *)pointer = '\0';
+		 	header_values = malloc(len);
 		 	strcpy(header_values, (pointer - len));
+		 	header_values[len] = '\0';
 		 	pointer += 1;
 		 	// test
 		 	char indexValue[50];
@@ -79,8 +80,8 @@ int main(int argc, char *argv[]) {
  			if (index_column == -1) {
  				exit(EXIT_FAILURE);
  			}
- 			int max = max_data(pointer, index_column);
- 			printf("%d", max);
+ 			int min = min_data(pointer, index_column);
+ 			printf("%d", min);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 5) {
@@ -92,8 +93,8 @@ int main(int argc, char *argv[]) {
  			if (index_column == -1) {
  				exit(EXIT_FAILURE);
  			}
- 			int min = min_data(pointer, index_column);
- 			printf("%d", min);
+ 			int max = max_data(pointer, index_column);
+ 			printf("%d", max);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 6) {
@@ -149,7 +150,7 @@ int main(int argc, char *argv[]) {
  * if argument is records, return 7;
  * Otherwise, not match all of these arguments, return 0;
  **/ 
-int argument_checker(char *argv) {
+int argument_checker(char *argv) { 
 	char argument[9] = {'-','h','\0','\0','\0','\0','\0','\0','\0'};
 	if (strcmp(argument, argv) == 0) {
 		return 1;
@@ -210,18 +211,20 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue) {
 				char str[50];
 				memset(str, '\0', 50);
 				strcpy(str, token);
+				int len = strlen(str);
 				// here has a bug. When the index value is the last column name.
 				// and it doesn't return correct index value
 				while (token != NULL) {
-					// printf("str is %s\n", str);
-					// printf("indexValue is %s\n", indexValue);
-					// printf("%d\n", strcmp(str, indexValue));
-					if (strcmp(str, indexValue) == 0) {
+					printf("str is %s\n", str);
+					printf("indexValue is %s\n", indexValue);
+					printf("%d\n", strncmp(indexValue, str, size_indexValue));
+					if (strncmp(indexValue, str, size_indexValue) == 0 && len == size_indexValue) {
 						return value;
 					}
 					memset(str, '\0', 50);
 					token = strtok(NULL, ",");
 					if (token != NULL) strcpy(str, token);
+					len = strlen(str);
 					value++;
 					// printf("%d\n", value);
 				}
@@ -231,7 +234,7 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue) {
 	return -1;
 } 
 
-
+// Ref_Datee Ref_Date
 
 // -f haonao
 int num_columns(void* pointer) {
