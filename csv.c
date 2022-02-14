@@ -5,7 +5,7 @@
 int num_columns(void* pointer);
 int num_rows(void* pointer);
 int argument_checker(char *argv);
-int index_columnName(char* pointer, int exist_header, char* indexValue);
+int index_columnName(char* nameArray, int exist_header, char* indexValue, int columns);
 int max_data(void* pointer, int index_column);
 int min_data(void* pointer, int index_column);
 double mean_data(void* pointer, int index_column);
@@ -36,8 +36,11 @@ int main(int argc, char *argv[]) {
  	 **/
  	int header = 1;
  	int columns = num_columns(pointer);
+ 	//int columns = 8;
  	char *header_values;
+ 	char indexValue[50];
  	for (int i = 1; i < argc - 1; i++) {
+ 		printf("%d, %s\n", i, argv[i]);
  		if (argument_checker(argv[i]) == 0) {
  			exit(EXIT_FAILURE);
  		}
@@ -48,80 +51,71 @@ int main(int argc, char *argv[]) {
 		 		len += 1;
 		 		pointer += 1;
 		 	}
-		 	//*(char *)pointer = '\0';
+		 	*(char *)pointer = '\0';
 		 	header_values = malloc(len);
 		 	strcpy(header_values, (pointer - len));
-		 	header_values[len] = '\0';
 		 	pointer += 1;
-		 	// test
-		 	char indexValue[50];
-			memset(indexValue, '\0', 50);
-			strcpy(indexValue, argv[i + 1]);
-		 	int i = index_columnName(header_values, 0, indexValue);
-		 	printf("index is %d\n", i);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 2) {
- 			printf("%d", columns);
+ 			printf("%d\n", columns);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 3) {
  			int rows = num_rows(pointer);
- 			printf("%d", rows);
+ 			printf("%d\n", rows);
  			continue;
  		}
  		int index_column;
  		if (argument_checker(argv[i]) == 4) {
  			i += 1;
- 			char indexValue[50];
 			memset(indexValue, '\0', 50);
 			strcpy(indexValue, argv[i]);
-		 	index_column = index_columnName(header_values, header, indexValue);
- 			if (index_column == -1) {
+		 	index_column = index_columnName(header_values, header, indexValue, columns);
+		 	printf("index_column is %d\n", index_column);
+ 			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
  			int min = min_data(pointer, index_column);
- 			printf("%d", min);
+ 			printf("%d\n", min);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 5) {
  			i += 1;
- 			char indexValue[50];
 			memset(indexValue, '\0', 50);
 			strcpy(indexValue, argv[i]);
-		 	index_column = index_columnName(header_values, header, indexValue);
- 			if (index_column == -1) {
+		 	index_column = index_columnName(header_values, header, indexValue, columns);
+ 			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
  			int max = max_data(pointer, index_column);
- 			printf("%d", max);
+ 			printf("%d\n", max);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 6) {
  			i += 1;
- 			char indexValue[50];
 			memset(indexValue, '\0', 50);
 			strcpy(indexValue, argv[i]);
-		 	index_column = index_columnName(header_values, header, indexValue);
- 			if (index_column == -1) {
+		 	index_column = index_columnName(header_values, header, indexValue, columns);
+ 			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
+
  			double mean = mean_data(pointer, index_column);
- 			printf("%f", mean);
+ 			printf("%f\n", mean);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 7) {
  			i += 1;
- 			char indexValue[50];
 			memset(indexValue, '\0', 50);
 			strcpy(indexValue, argv[i]);
-		 	index_column = index_columnName(header_values, header, indexValue);
- 			if (index_column == -1) {
+		 	index_column = index_columnName(header_values, header, indexValue, columns);
+ 			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
  			i += 1;
  			char* target = find_data(pointer, index_column, argv[i]);
- 			printf("%s", target);
+ 			printf("%s\n", target);
  		}
  	}
 
@@ -193,7 +187,7 @@ int argument_checker(char *argv) {
 	return 0;
 }
 
-int index_columnName(char* nameArray, int exist_header, char* indexValue) { 
+int index_columnName(char* nameArray, int exist_header, char* indexValue, int columns) { 
 	int size_indexValue = strlen(indexValue);
 	if (size_indexValue == 1 && *indexValue == '0') {
 		return 0;
@@ -212,21 +206,23 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue) {
 				memset(str, '\0', 50);
 				strcpy(str, token);
 				int len = strlen(str);
-				// here has a bug. When the index value is the last column name.
-				// and it doesn't return correct index value
+				
 				while (token != NULL) {
-					printf("str is %s\n", str);
-					printf("indexValue is %s\n", indexValue);
-					printf("%d\n", strncmp(indexValue, str, size_indexValue));
-					if (strncmp(indexValue, str, size_indexValue) == 0 && len == size_indexValue) {
+					//printf("token is %s.\n", token);
+					//printf("indexValue is %s.\n", indexValue);
+					//printf("value is %d.\n", value);
+					if (value == columns - 1) len--;
+					//printf("%d, %d\n", size_indexValue, len);
+					if (strncmp(indexValue, str, size_indexValue) == 0 && size_indexValue == len) {
 						return value;
 					}
 					memset(str, '\0', 50);
 					token = strtok(NULL, ",");
-					if (token != NULL) strcpy(str, token);
+					if (token != NULL) {
+						strcpy(str, token);
+					}
 					len = strlen(str);
 					value++;
-					// printf("%d\n", value);
 				}
 			}
 		}
