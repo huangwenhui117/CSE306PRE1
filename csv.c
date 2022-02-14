@@ -41,6 +41,8 @@ int main(int argc, char *argv[]) {
  	char indexValue[50];
  	for (int i = 1; i < argc - 1; i++) {
  		printf("%d, %s\n", i, argv[i]);
+		int checks = argument_checker(argv[i]);
+		printf("check is: %d\n", checks);
  		if (argument_checker(argv[i]) == 0) {
  			exit(EXIT_FAILURE);
  		}
@@ -63,7 +65,7 @@ int main(int argc, char *argv[]) {
  		}
  		if (argument_checker(argv[i]) == 3) {
  			int rows = num_rows(pointer);
- 			printf("%d\n", rows);
+ 			printf("rows: %d\n", rows);
  			continue;
  		}
  		int index_column;
@@ -151,7 +153,7 @@ int argument_checker(char *argv) {
 	}
 	argument[1] = 'f';
 	if (strcmp(argument, argv) == 0) {
-		return 2;
+		return 2;	
 	}
 	argument[1] = 'r';
 	if (strcmp(argument, argv) == 0) {
@@ -239,7 +241,14 @@ int num_columns(void* pointer) {
 
 // -r jiaqian
 int num_rows(void* pointer) {
-	return 0;
+	int nums = 0;
+	char *token = strtok(pointer, "\n");
+
+	while (token != NULL) {
+         token = strtok(NULL, " ");
+		 nums++;
+	}
+	return nums;
 }
 
 // max jingjing
