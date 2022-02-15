@@ -259,7 +259,7 @@ int num_rows(void* pointer) {
 // max jingjing
 int max_data(void* pointer, int index_column) {
 	int max_value = helper((char *)pointer, index_column);
-	int i = -32768;
+	int i = 1;
 	if(number_line == 0) num_rows(pointer);
 
 	while( i< number_line) {
@@ -329,6 +329,7 @@ double mean_data(void* pointer, int index_column) {
 
 // records jingjing
 char* find_data(void* pointer, int index_column, char* target) {
+	
 	return NULL;
 }
 
