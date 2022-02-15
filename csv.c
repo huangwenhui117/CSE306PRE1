@@ -8,11 +8,13 @@ int num_rows(void* pointer);
 int argument_checker(char *argv);
 int index_columnName(char* nameArray, int exist_header, char* indexValue, int columns);
 int max_data(void* pointer, int index_column);
-int min_data(void* pointer, int index_column);
-int min_data_helper(char *cur, int index_column);
+void min_data(void* pointer, int index_column);
+double helper(char *cur, int index_column);
 double mean_data(void* pointer, int index_column);
 char* find_data(void* pointer, int index_column, char* target);
 int str_cmp(char* str1, char* str2);
+
+int number_line = 0;
 
 int main(int argc, char *argv[]) {
 
@@ -80,11 +82,10 @@ int main(int argc, char *argv[]) {
  			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
-			for (int i = 0; i < 4; i++) {
-				printf("%c\n", *(char *)(pointer + i));
-			}
- 			int min = min_data(pointer, index_column);
- 			printf("%d\n", min);
+			// for (int i = 0; i < 4; i++) {
+			// 	printf("%c\n", *(char *)(pointer + i));
+			// }
+ 			min_data(pointer, index_column);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 5) {
@@ -246,14 +247,13 @@ int num_columns(void* pointer) {
 
 // -r jiaqian
 int num_rows(void* pointer) {
-	int nums = 0;
 	char *token = strtok(pointer, "\n");
 
 	while (token != NULL) {
-         token = strtok(NULL, " ");
-		 nums++;
+         token = strtok(NULL, "\n");
+		 number_line++;
 	}
-	return nums;
+	return number_line;
 }
 
 // max jingjing
@@ -262,47 +262,47 @@ int max_data(void* pointer, int index_column) {
 }
 
 // min jiaqian
-int min_data(void* pointer, int index_column) {
-	printf("I am here");
-	char *token = strtok(pointer, "\n");
+void min_data(void* pointer, int index_column) {
 	
-	int i = 0;
-	char *cur = token;
-	printf("min_value: %d", i);
-	int min_value = min_data_helper(cur, index_column);
-	
-	while (token != NULL) {
-         token = strtok(NULL, "\n");
-		 cur = token;
-		 int value = min_data_helper(cur,index_column);
-		 if(value < min_value) min_value = value;
+	double min_value = helper((char *)pointer, index_column);
+	int i = 1;
+	if(number_line == 0) num_rows(pointer);
+
+	while( i< number_line) {
+		int j = 0;
+        while(*(char *)pointer !='\n' && *(char *)pointer !='\0' ){
+			pointer++;
+		}
+		pointer ++;
+		if(pointer !=NULL){
+			double value = helper((char *)pointer,index_column);
+			if(value < min_value) min_value = value;
+		}
+		i ++;
 	}
-	printf("min_value: %d", min_value);
-	return min_value;
+	printf("min_value: %.3f.", min_value);
 }
 
-int min_data_helper(char *cur, int index_column){
+double helper(char *cur, int index_column){
 	bool flag = false;
 
 	int i = 0;
-	while(i != index_column){
+	while(cur!= NULL && cur[0] != '\n' && i != index_column){
+		if(cur[0] == '\0') return 0;
 		if(cur[0] == '\"'){
+			
 			if(flag == true) {
 				flag = false;
-				i++;
 			}
 			else flag = true;
 		}
-		else if(cur[0] == ',') i++;
+		else if(cur[0] == ','){
+			if(flag != true) i++;
+		} 
 		cur ++;
 	}
-
-	int value = 0;
-	while(atoi(cur)){
-		value = value*10 + atoi(cur);
-		cur ++;
-	}
-	return value;
+	char *e;
+	return strtod(cur, &e);
 }
 
 // mean haonan
