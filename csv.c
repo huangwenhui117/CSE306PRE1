@@ -258,7 +258,24 @@ int num_rows(void* pointer) {
 
 // max jingjing
 int max_data(void* pointer, int index_column) {
-	return 0;
+	int max_value = helper((char *)pointer, index_column);
+	int i = -32768;
+	if(number_line == 0) num_rows(pointer);
+
+	while( i< number_line) {
+		int j = 0;
+        while(*(char *)pointer !='\n' && *(char *)pointer !='\0' ){
+			pointer++;
+		}
+		pointer ++;
+		if(pointer !=NULL){
+			double value = helper((char *)pointer,index_column);
+			if(value > max_value) max_value = value;
+		}
+		i ++;
+	}
+	//printf("max_value: %d", max_value);
+	return max_value;
 }
 
 // min jiaqian
