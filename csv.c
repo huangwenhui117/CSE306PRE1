@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 int num_columns(void* pointer);
 int num_rows(void* pointer);
@@ -8,6 +9,7 @@ int argument_checker(char *argv);
 int index_columnName(char* nameArray, int exist_header, char* indexValue, int columns);
 int max_data(void* pointer, int index_column);
 int min_data(void* pointer, int index_column);
+int min_data_helper(char *cur, int index_column);
 double mean_data(void* pointer, int index_column);
 char* find_data(void* pointer, int index_column, char* target);
 int str_cmp(char* str1, char* str2);
@@ -35,8 +37,8 @@ int main(int argc, char *argv[]) {
  	 * else, include header;
  	 **/
  	int header = 1;
- 	int columns = num_columns(pointer);
- 	//int columns = 8;
+ 	//int columns = num_columns(pointer);
+ 	int columns = 8;
  	char *header_values;
  	char indexValue[50];
  	for (int i = 1; i < argc - 1; i++) {
@@ -78,6 +80,9 @@ int main(int argc, char *argv[]) {
  			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
+			for (int i = 0; i < 4; i++) {
+				printf("%c\n", *(char *)(pointer + i));
+			}
  			int min = min_data(pointer, index_column);
  			printf("%d\n", min);
  			continue;
@@ -258,7 +263,46 @@ int max_data(void* pointer, int index_column) {
 
 // min jiaqian
 int min_data(void* pointer, int index_column) {
-	return 0;
+	printf("I am here");
+	char *token = strtok(pointer, "\n");
+	
+	int i = 0;
+	char *cur = token;
+	printf("min_value: %d", i);
+	int min_value = min_data_helper(cur, index_column);
+	
+	while (token != NULL) {
+         token = strtok(NULL, "\n");
+		 cur = token;
+		 int value = min_data_helper(cur,index_column);
+		 if(value < min_value) min_value = value;
+	}
+	printf("min_value: %d", min_value);
+	return min_value;
+}
+
+int min_data_helper(char *cur, int index_column){
+	bool flag = false;
+
+	int i = 0;
+	while(i != index_column){
+		if(cur[0] == '\"'){
+			if(flag == true) {
+				flag = false;
+				i++;
+			}
+			else flag = true;
+		}
+		else if(cur[0] == ',') i++;
+		cur ++;
+	}
+
+	int value = 0;
+	while(atoi(cur)){
+		value = value*10 + atoi(cur);
+		cur ++;
+	}
+	return value;
 }
 
 // mean haonan
