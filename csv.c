@@ -247,10 +247,11 @@ int num_columns(void* pointer) {
 	int num_columns = 0;
 	
 	//read the element of the first line, and if it is not '\n',go next
-	while(fscan(pointer,",%s",element) != '\n'){
-		num_columns += 1;
-	}
-
+	if(fscan(pointer,"%s",element) == 1){
+		while(fscan(pointer,",%s",element) != '\n'){
+			num_columns += 1;
+			}
+	}	
 	return num_columns;
 }
 
@@ -341,10 +342,11 @@ double mean_data(void* pointer, int index_column) {
 	int n = 0;
 	double retVal = 0;
 
-	//if there is only a line
+	//if there is no line
 	if(number_line == 0) {
 		num_rows(pointer);
 	}
+
 	//cal the average
 	while( i < number_line) {
 		int j = 0;
@@ -355,6 +357,7 @@ double mean_data(void* pointer, int index_column) {
 		n += 1;
 		if(pointer != NULL){
 			double value = helper((char *)pointer,index_column);
+			field_value += value;
 			retVal = field_value/n;
 		}
 		i ++;
