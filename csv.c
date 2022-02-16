@@ -13,6 +13,7 @@ double helper(char *cur, int index_column);
 double mean_data(void* pointer, int index_column);
 char* find_data(void* pointer, int index_column, char* target);
 int str_cmp(char* str1, char* str2);
+bool flag_point;
 
 int number_line = 0;
 
@@ -309,7 +310,10 @@ void min_data(void* pointer, int index_column) {
 		}
 		i ++;
 	}
-	printf("min_value: %.3f", min_value);
+	if(flag_point == true)
+		printf("min_value: %.3f", min_value);
+	else 
+		printf("min_value: %.0f", min_value);
 }
 
 double helper(char *cur, int index_column){
@@ -332,7 +336,7 @@ double helper(char *cur, int index_column){
 	}
 	
 	int index_numbers = 0;
-	bool flag_point = false;
+	flag_point = false;
 	while( cur[0] != '\0' && cur[0] != '\r' && cur[0] != '\n' && cur[0] != ',' ){
 		int a = cur[0]-'0';
 		if(a>9){
@@ -348,8 +352,11 @@ double helper(char *cur, int index_column){
 		cur ++;
 	}
 	cur -= index_numbers;
-	char *e;
-	return strtod(cur, &e);
+	if(flag_point == true){
+		char *e;
+		return strtod(cur, &e);
+	}
+	else return atoi(cur);
 }
 
 // mean haonan
