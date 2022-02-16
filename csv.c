@@ -333,6 +333,34 @@ double helper(char *cur, int index_column){
 
 // mean haonan
 double mean_data(void* pointer, int index_column) {
+    //get the data 
+	double field_value = helper((char *)pointer, index_column);
+
+	//initializa value
+	int i = 1;
+	int n = 0;
+	double retVal = 0;
+
+	//if there is only a line
+	if(number_line == 0) {
+		num_rows(pointer);
+	}
+	//cal the average
+	while( i < number_line) {
+		int j = 0;
+        while(*(char *)pointer !='\n' && *(char *)pointer !='\0' ){
+			pointer++;
+		}
+		pointer ++;
+		n += 1;
+		if(pointer != NULL){
+			double value = helper((char *)pointer,index_column);
+			retVal = field_value/n;
+		}
+		i ++;
+	}
+	printf("mean_value: %.3f.", retVal);
+	
 	return 0.0;
 }
 
