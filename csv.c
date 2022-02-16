@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
  			}
  			i += 1;
  			char* target = find_data(pointer, index_column, argv[i]);
- 			printf("%s\n", target);
+ 			//printf("%s\n", target);
  		}
  	}
 
@@ -284,7 +284,7 @@ void min_data(void* pointer, int index_column) {
 	
 	double min_value = helper((char *)pointer, index_column);
 	
-	int i = 1;
+	int i = 1;000
 	if(number_line == 0) num_rows(pointer);
 
 
@@ -384,9 +384,59 @@ double mean_data(void* pointer, int index_column) {
 	return 0.0;
 }
 
+bool read_col(char *token ,int index_column,char* target){
+	int quote = 0; 
+	int count =0;
+	int target_len = strlen(target);
+	printf("target_len is %d\n", target_len);
+	while ( token[0] != '\0' && token[0] != '\n' && token[0] != '\r'){
+		if (count == index_column ){
+			int len = 0;
+			char *ptr = token;
+			printf("%s\n", ptr);
+			while (token[0] != '\0' && token[0] != '\n' && token[0] != '\r') {
+				len++;
+				token++;
+			}
+			printf("len is %d\n", len);
+			if (len == target_len) {
+				for (int i = 0; i < len; i++) {
+					if (target[i] != ptr[i]) {
+						return false;
+					}
+				}
+			} else {
+				return false;
+			}
+		}
+		if (quote%2==0 && token[0] == ','){
+			count ++;
+		}
+		if (token[0] == '\"' ){
+			quote +=1;
+		}
+		token ++;
+	}
+	return true;
+}
 // records jingjing
 char* find_data(void* pointer, int index_column, char* target) {
+	//printf("pointer is %s\n", (char *)pointer);
+	char *token = strtok(pointer, "\n");
 	
+	while( token != NULL ){
+		bool value = read_col(token, index_column, target);
+		// if (strncmp(target, value, strlen(value)) ==0 ){
+		// 	printf("%s\n",token);
+		// }
+		if (value) {
+			printf("%s\n",token);
+		}
+		token = strtok(NULL, "\n");
+		// memset(temp,'\0',1024);
+		// strcpy(temp,token);
+	
+	}
 	return NULL;
 }
 
