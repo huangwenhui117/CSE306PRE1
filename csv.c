@@ -8,7 +8,7 @@ int num_rows(void* pointer);
 int argument_checker(char *argv);
 int index_columnName(char* nameArray, int exist_header, char* indexValue, int columns);
 int max_data(void* pointer, int index_column);
-double min_data(void* pointer, int index_column);
+void min_data(void* pointer, int index_column);
 double helper(char *cur, int index_column);
 double mean_data(void* pointer, int index_column);
 char* find_data(void* pointer, int index_column, char* target);
@@ -247,8 +247,8 @@ int num_columns(void* pointer) {
 	int num_columns = 0;
 	
 	//read the element of the first line, and if it is not '\n',go next
-	if(fscan(pointer,"%s",element) == 1){
-		while(fscan(pointer,",%s",element) != '\n'){
+	if(fscanf(pointer,"%s",element) == 1){
+		while(fscanf(pointer,",%s",element) != '\n'){
 			num_columns += 1;
 			}
 	}	
@@ -289,12 +289,13 @@ int max_data(void* pointer, int index_column) {
 }
 
 // min jiaqian
-double min_data(void* pointer, int index_column) {
+void min_data(void* pointer, int index_column) {
 	
 	double min_value = helper((char *)pointer, index_column);
-	if(min_value == EXIT_FAILURE) return min_value;
+	
 	int i = 1;
 	if(number_line == 0) num_rows(pointer);
+
 
 	while( i< number_line) {
 		int j = 0;
@@ -308,8 +309,7 @@ double min_data(void* pointer, int index_column) {
 		}
 		i ++;
 	}
-	printf("min_value: %.3f.", min_value);
-	return min_value;
+	printf("min_value: %.3f", min_value);
 }
 
 double helper(char *cur, int index_column){
@@ -317,7 +317,7 @@ double helper(char *cur, int index_column){
 
 	int i = 0;
 	while(cur!= NULL && cur[0] != '\n' && i != index_column){
-		if(cur[0] == '\0') return 0;
+		if(cur[0] == '\0') exit(EXIT_FAILURE);
 		if(cur[0] == '\"'){
 			
 			if(flag == true) {
@@ -330,9 +330,24 @@ double helper(char *cur, int index_column){
 		} 
 		cur ++;
 	}
-	if(cur[0] == ' '){
-		return EXIT_FAILURE;
+	
+	int index_numbers = 0;
+	bool flag_point = false;
+	while( cur[0] != '\0' && cur[0] != '\r' && cur[0] != '\n' && cur[0] != ',' ){
+		int a = cur[0]-'0';
+		if(a>9){
+			exit(EXIT_FAILURE);
+		}
+		else{
+			if((a == -2 && flag_point == true ) || (a<0 && a!= -2)){
+				exit(EXIT_FAILURE);
+			}
+			else if(a == -2) flag_point = true;
+		}
+		index_numbers++;
+		cur ++;
 	}
+	cur -= index_numbers;
 	char *e;
 	return strtod(cur, &e);
 }
