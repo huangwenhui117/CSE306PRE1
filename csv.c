@@ -369,38 +369,33 @@ double mean_data(void* pointer, int index_column) {
 
 char *read_col( char *token,int index_column){
 	int quote = 0; 
-	char *string; 
+ 	char *string; 
 	int count =0;
-	
-	while ( token[0] != '\0' && token[0] != '\n'){
-		
+	while ( token[0] != '\0' && token[0] != '\n' && token[0] != '\r'){
 		if (count == index_column ){
-			
-			while(token[0] != '\0' && token[0] != '\n' && token[0] != ','){
-				printf("string is %c\n", token[0]);
-			  //strcat(string, & token[0]);
-			  token ++;
-			}
+			char *temp = strtok(token, ",");
+			//printf("%s\n", temp);	
+			return temp;	
 		}
 		if (quote%2==0 && token[0] == ','){
-			count += 1;
+			count ++;
 		}
 		if (token[0] == '\"' ){
 			quote +=1;
 		}
 		token ++;
 	}
-	return string;
+	//printf("string is %c\n", token[0]);
+	return NULL;
 }
 // records jingjing
 char* find_data(void* pointer, int index_column, char* target) {
 	
 	char *token = strtok(pointer, "\n");
-	if(number_line == 0) num_rows(pointer);
-
-	while(  token != NULL ){
+	while( token != NULL ){
 		char *value = read_col(token, index_column);
-		if (target == value){
+		printf("token is ------%s\n",token);
+		if (strncmp(target, value, strlen(value)) ==0 ){
 			printf("%s\n",token);
 		}
 		token = strtok(NULL, "\n");
