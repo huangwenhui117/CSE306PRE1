@@ -242,17 +242,7 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue, int co
 
 // -f haonan
 int num_columns(void* pointer) {
-	//initializa variables
-	char element[1000];
-	int num_columns = 0;
-	
-	//read the element of the first line, and if it is not '\n',go next
-	if(fscanf(pointer,"%s",element) == 1){
-		while(fscanf(pointer,",%s",element) != '\n'){
-			num_columns += 1;
-			}
-	}	
-	return num_columns;
+	return 0;
 }
 
 // -r jiaqian
