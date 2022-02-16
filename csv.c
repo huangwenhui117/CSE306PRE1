@@ -240,9 +240,19 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue, int co
 
 // Ref_Datee Ref_Date
 
-// -f haonao
+// -f haonan
 int num_columns(void* pointer) {
-	return 0;
+	//initializa variables
+	char element[1000];
+	int num_columns = 0;
+	
+	//read the element of the first line, and if it is not '\n',go next
+	if(fscan(pointer,"%s",element) == 1){
+		while(fscan(pointer,",%s",element) != '\n'){
+			num_columns += 1;
+			}
+	}	
+	return num_columns;
 }
 
 // -r jiaqian
@@ -258,7 +268,24 @@ int num_rows(void* pointer) {
 
 // max jingjing
 int max_data(void* pointer, int index_column) {
-	return 0;
+	int max_value = helper((char *)pointer, index_column);
+	int i = 1;
+	if(number_line == 0) num_rows(pointer);
+
+	while( i< number_line) {
+		int j = 0;
+        while(*(char *)pointer !='\n' && *(char *)pointer !='\0' ){
+			pointer++;
+		}
+		pointer ++;
+		if(pointer !=NULL){
+			double value = helper((char *)pointer,index_column);
+			if(value > max_value) max_value = value;
+		}
+		i ++;
+	}
+	//printf("max_value: %d", max_value);
+	return max_value;
 }
 
 // min jiaqian
@@ -312,11 +339,42 @@ double helper(char *cur, int index_column){
 
 // mean haonan
 double mean_data(void* pointer, int index_column) {
+    //get the data 
+	double field_value = helper((char *)pointer, index_column);
+
+	//initializa value
+	int i = 1;
+	int n = 0;
+	double retVal = 0;
+
+	//if there is no line
+	if(number_line == 0) {
+		num_rows(pointer);
+	}
+
+	//cal the average
+	while( i < number_line) {
+		int j = 0;
+        while(*(char *)pointer !='\n' && *(char *)pointer !='\0' ){
+			pointer++;
+		}
+		pointer ++;
+		n += 1;
+		if(pointer != NULL){
+			double value = helper((char *)pointer,index_column);
+			field_value += value;
+			retVal = field_value/n;
+		}
+		i ++;
+	}
+	printf("mean_value: %.3f.", retVal);
+	
 	return 0.0;
 }
 
 // records jingjing
 char* find_data(void* pointer, int index_column, char* target) {
+	
 	return NULL;
 }
 
