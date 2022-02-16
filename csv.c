@@ -8,7 +8,7 @@ int num_rows(void* pointer);
 int argument_checker(char *argv);
 int index_columnName(char* nameArray, int exist_header, char* indexValue, int columns);
 int max_data(void* pointer, int index_column);
-void min_data(void* pointer, int index_column);
+double min_data(void* pointer, int index_column);
 double helper(char *cur, int index_column);
 double mean_data(void* pointer, int index_column);
 char* find_data(void* pointer, int index_column, char* target);
@@ -262,9 +262,10 @@ int max_data(void* pointer, int index_column) {
 }
 
 // min jiaqian
-void min_data(void* pointer, int index_column) {
+double min_data(void* pointer, int index_column) {
 	
 	double min_value = helper((char *)pointer, index_column);
+	if(min_value == EXIT_FAILURE) return min_value;
 	int i = 1;
 	if(number_line == 0) num_rows(pointer);
 
@@ -281,6 +282,7 @@ void min_data(void* pointer, int index_column) {
 		i ++;
 	}
 	printf("min_value: %.3f.", min_value);
+	return min_value;
 }
 
 double helper(char *cur, int index_column){
@@ -300,6 +302,9 @@ double helper(char *cur, int index_column){
 			if(flag != true) i++;
 		} 
 		cur ++;
+	}
+	if(cur[0] == ' '){
+		return EXIT_FAILURE;
 	}
 	char *e;
 	return strtod(cur, &e);
