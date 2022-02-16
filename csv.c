@@ -247,11 +247,11 @@ int num_columns(void* pointer) {
 	int num_columns = 0;
 	
 	//read the element of the first line, and if it is not '\n',go next
-	if(fscan(pointer,"%s",element) == 1){
-		while(fscan(pointer,",%s",element) != '\n'){
-			num_columns += 1;
-			}
-	}	
+	// if(fscan(pointer,"%s",element) == 1){
+	// 	while(fscan(pointer,",%s",element) != '\n'){
+	// 		num_columns += 1;
+	// 		}
+	// }	
 	return num_columns;
 }
 
@@ -367,11 +367,43 @@ double mean_data(void* pointer, int index_column) {
 	return 0.0;
 }
 
+char *read_col( char *token,int index_column){
+	int quote = 0; 
+	char *string; 
+	int count =0;
+	
+	while ( token[0] != '\0' && token[0] != '\n'){
+		
+		if (count == index_column ){
+			
+			while(token[0] != '\0' && token[0] != '\n' && token[0] != ','){
+				printf("string is %c\n", token[0]);
+			  //strcat(string, & token[0]);
+			  token ++;
+			}
+		}
+		if (quote%2==0 && token[0] == ','){
+			count += 1;
+		}
+		if (token[0] == '\"' ){
+			quote +=1;
+		}
+		token ++;
+	}
+	return string;
+}
 // records jingjing
 char* find_data(void* pointer, int index_column, char* target) {
 	
+	char *token = strtok(pointer, "\n");
+	if(number_line == 0) num_rows(pointer);
+
+	while(  token != NULL ){
+		char *value = read_col(token, index_column);
+		if (target == value){
+			printf("%s\n",token);
+		}
+		token = strtok(NULL, "\n");
+	}
 	return NULL;
 }
-
-
-
