@@ -240,9 +240,18 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue, int co
 
 // Ref_Datee Ref_Date
 
-// -f haonao
+// -f haonan
 int num_columns(void* pointer) {
-	return 0;
+	//initializa variables
+	char element[1000];
+	int num_columns = 0;
+	
+	//read the element of the first line, and if it is not '\n',go next
+	while(fscan(pointer,",%s",element) != '\n'){
+		num_columns += 1;
+	}
+
+	return num_columns;
 }
 
 // -r jiaqian
