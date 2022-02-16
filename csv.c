@@ -283,7 +283,7 @@ void min_data(void* pointer, int index_column) {
 	
 	double min_value = helper((char *)pointer, index_column);
 	
-	int i = 1;000
+	int i = 1;
 	if(number_line == 0) num_rows(pointer);
 
 
@@ -381,17 +381,17 @@ bool read_col(char *token ,int index_column,char* target){
 	int quote = 0; 
 	int count =0;
 	int target_len = strlen(target);
-	printf("target_len is %d\n", target_len);
+	//printf("target_len is %d\n", target_len);
 	while ( token[0] != '\0' && token[0] != '\n' && token[0] != '\r'){
 		if (count == index_column ){
 			int len = 0;
 			char *ptr = token;
-			printf("%s\n", ptr);
+			//printf("%s\n", ptr);
 			while (token[0] != '\0' && token[0] != '\n' && token[0] != '\r') {
 				len++;
 				token++;
 			}
-			printf("len is %d\n", len);
+			//printf("len is %d\n", len);
 			if (len == target_len) {
 				for (int i = 0; i < len; i++) {
 					if (target[i] != ptr[i]) {
