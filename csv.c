@@ -4,10 +4,10 @@
 #include <stdbool.h>
 
 int num_columns(void* pointer);
-int num_rows(void* pointer);
+void num_rows(void* pointer);
 int argument_checker(char *argv);
 int index_columnName(char* nameArray, int exist_header, char* indexValue, int columns);
-int max_data(void* pointer, int index_column);
+void max_data(void* pointer, int index_column);
 void min_data(void* pointer, int index_column);
 double helper(char *cur, int index_column);
 double mean_data(void* pointer, int index_column);
@@ -21,7 +21,6 @@ int main(int argc, char *argv[]) {
 
    	FILE *inFile = NULL;
 
-  	printf("argc: %d\n",argc);
     inFile = fopen(argv[argc - 1], "r");  // open file for reading
   	if (inFile == NULL) {
     	return 0;
@@ -45,9 +44,7 @@ int main(int argc, char *argv[]) {
  	char *header_values;
  	char indexValue[50];
  	for (int i = 1; i < argc - 1; i++) {
- 		printf("%d, %s\n", i, argv[i]);
 		int checks = argument_checker(argv[i]);
-		printf("check is: %d\n", checks);
  		if (argument_checker(argv[i]) == 0) {
  			exit(EXIT_FAILURE);
  		}
@@ -65,12 +62,10 @@ int main(int argc, char *argv[]) {
  			continue;
  		}
  		if (argument_checker(argv[i]) == 2) {
- 			printf("%d\n", columns);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 3) {
- 			int rows = num_rows(pointer);
- 			printf("rows: %d\n", rows);
+ 			num_rows(pointer);
  			continue;
  		}
  		int index_column;
@@ -79,7 +74,7 @@ int main(int argc, char *argv[]) {
 			memset(indexValue, '\0', 50);
 			strcpy(indexValue, argv[i]);
 		 	index_column = index_columnName(header_values, header, indexValue, columns);
-		 	printf("index_column is %d\n", index_column);
+		 	
  			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
@@ -97,8 +92,8 @@ int main(int argc, char *argv[]) {
  			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
- 			int max = max_data(pointer, index_column);
- 			printf("%d\n", max);
+ 			max_data(pointer, index_column);
+ 			
  			continue;
  		}
  		if (argument_checker(argv[i]) == 6) {
@@ -111,7 +106,7 @@ int main(int argc, char *argv[]) {
  			}
 
  			double mean = mean_data(pointer, index_column);
- 			printf("%f\n", mean);
+ 			
  			continue;
  		}
  		if (argument_checker(argv[i]) == 7) {
@@ -247,19 +242,19 @@ int num_columns(void* pointer) {
 }
 
 // -r jiaqian
-int num_rows(void* pointer) {
+void num_rows(void* pointer) {
 	char *token = strtok(pointer, "\n");
 
 	while (token != NULL) {
          token = strtok(NULL, "\n");
 		 number_line++;
 	}
-	return number_line;
+	printf("%d\n",number_line);
 }
 
 // max jingjing
-int max_data(void* pointer, int index_column) {
-	int max_value = helper((char *)pointer, index_column);
+void max_data(void* pointer, int index_column) {
+	double max_value = helper((char *)pointer, index_column);
 	int i = 1;
 	if(number_line == 0) num_rows(pointer);
 
@@ -275,8 +270,10 @@ int max_data(void* pointer, int index_column) {
 		}
 		i ++;
 	}
-	//printf("max_value: %d", max_value);
-	return max_value;
+	if(flag_point == true)
+		printf("%.3f\n", max_value);
+	else 
+		printf("%.0f\n", max_value);
 }
 
 // min jiaqian
@@ -301,9 +298,9 @@ void min_data(void* pointer, int index_column) {
 		i ++;
 	}
 	if(flag_point == true)
-		printf("min_value: %.3f", min_value);
+		printf("%.3f\n", min_value);
 	else 
-		printf("min_value: %.0f", min_value);
+		printf("%.0f\n", min_value);
 }
 
 double helper(char *cur, int index_column){
