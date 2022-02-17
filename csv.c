@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-
+#include <math.h>
 int num_columns(void* pointer);
 void num_rows(void* pointer);
 int argument_checker(char *argv);
@@ -65,7 +65,8 @@ int main(int argc, char *argv[]) {
  			continue;
  		}
  		if (argument_checker(argv[i]) == 3) {
- 			num_rows(pointer);
+ 			 num_rows(pointer);
+			 printf("%d\n",number_line);
  			continue;
  		}
  		int index_column;
@@ -238,7 +239,20 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue, int co
 
 // -f haonan
 int num_columns(void* pointer) {
-	return 0;
+	int quote = 0; 
+	int count =0;
+	//printf("target_len is %d\n", target_len);
+	char *token = strtok(pointer, "\n");
+	while ( token[0] != '\0' && token[0] != '\n' && token[0] != '\r'){
+		if (quote%2==0 && token[0] == ','){
+			count ++;
+		}
+		if (token[0] == '\"' ){
+			quote +=1;
+		}
+		token ++;
+	}
+	return count;
 }
 
 // -r jiaqian
@@ -249,7 +263,7 @@ void num_rows(void* pointer) {
          token = strtok(NULL, "\n");
 		 number_line++;
 	}
-	printf("%d\n",number_line);
+	//printf("%d\n",number_line);
 }
 
 // max jingjing
@@ -271,7 +285,7 @@ void max_data(void* pointer, int index_column) {
 		i ++;
 	}
 	if(flag_point == true)
-		printf("%.3f\n", max_value);
+		printf("%.2f\n", floorf(max_value * 100) / 100 );
 	else 
 		printf("%.0f\n", max_value);
 }
@@ -298,7 +312,7 @@ void min_data(void* pointer, int index_column) {
 		i ++;
 	}
 	if(flag_point == true)
-		printf("%.3f\n", min_value);
+		printf("%.2f\n", floorf(min_value * 100) / 100);
 	else 
 		printf("%.0f\n", min_value);
 }
@@ -376,9 +390,9 @@ double mean_data(void* pointer, int index_column) {
 		}
 		i ++;
 	}
-	printf("mean_value: %.3f.", retVal);
+	printf("%.2f\n", floorf(retVal * 100) / 100);
 	
-	return 0.0;
+	return retVal;
 }
 
 bool read_col(char *token ,int index_column,char* target){
@@ -423,16 +437,11 @@ char* find_data(void* pointer, int index_column, char* target) {
 	
 	while( token != NULL ){
 		bool value = read_col(token, index_column, target);
-		// if (strncmp(target, value, strlen(value)) ==0 ){
-		// 	printf("%s\n",token);
-		// }
+		
 		if (value) {
 			printf("%s\n",token);
 		}
 		token = strtok(NULL, "\n");
-		// memset(temp,'\0',1024);
-		// strcpy(temp,token);
-	
 	}
 	return NULL;
 }
