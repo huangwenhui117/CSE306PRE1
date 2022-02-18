@@ -14,7 +14,6 @@ double mean_data(void* pointer, int index_column);
 char* find_data(void* pointer, int index_column, char* target);
 int str_cmp(char* str1, char* str2);
 bool flag_point;
-bool flag_with_h = false;
 
 int number_line = 0;
 
@@ -83,6 +82,7 @@ int main(int argc, char *argv[]) {
 			// for (int i = 0; i < 4; i++) {
 			// 	printf("%c\n", *(char *)(pointer + i));
 			// }
+			printf("header_values at min %s\n",header_values);
  			min_data(pointer, index_column);
  			continue;
  		}
@@ -94,24 +94,30 @@ int main(int argc, char *argv[]) {
  			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
+			 printf("header_values at max %s\n",header_values);
  			max_data(pointer, index_column);
  			
  			continue;
  		}
  		if (argument_checker(argv[i]) == 6) {
+			  
  			i += 1;
 			memset(indexValue, '\0', 50);
 			strcpy(indexValue, argv[i]);
+			
+			printf("head array %s\n", header_values);
 		 	index_column = index_columnName(header_values, header, indexValue, columns);
+			 printf("%d\n",index_column);
  			if (index_column == -1 || index_column >= columns) {
  				exit(EXIT_FAILURE);
  			}
-
+			printf("header_values at mean %s\n",header_values);
  			double mean = mean_data(pointer, index_column);
  			
  			continue;
  		}
  		if (argument_checker(argv[i]) == 7) {
+			
  			i += 1;
 			memset(indexValue, '\0', 50);
 			strcpy(indexValue, argv[i]);
@@ -194,6 +200,7 @@ int argument_checker(char *argv) {
 }
 
 int index_columnName(char* nameArray, int exist_header, char* indexValue, int columns) { 
+	//printf("value %s\n", indexValue);
 	int size_indexValue = strlen(indexValue);
 	if (size_indexValue == 1 && *indexValue == '0') {
 		return 0;
@@ -205,8 +212,11 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue, int co
 			return -1;
 		} else {
 			if (exist_header == 1) // header doesn't exist.
+
 				return -1;
+
 			else {
+				printf("name array %s\n", nameArray);
 				char *token = strtok(nameArray, ",");
 				char str[50];
 				memset(str, '\0', 50);
@@ -214,12 +224,13 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue, int co
 				int len = strlen(str);
 				
 				while (token != NULL) {
-					//printf("token is %s.\n", token);
-					//printf("indexValue is %s.\n", indexValue);
-					//printf("value is %d.\n", value);
+					printf("token is %s.\n", token);
+					printf("indexValue is %s.\n", indexValue);
+					printf("value is %d.\n", value);
 					if (value == columns - 1) len--;
 					//printf("%d, %d\n", size_indexValue, len);
 					if (strncmp(indexValue, str, size_indexValue) == 0 && size_indexValue == len) {
+						//printf("value is229 %d.\n", value);
 						return value;
 					}
 					memset(str, '\0', 50);
@@ -264,15 +275,12 @@ void num_rows(void* pointer) {
          token = strtok(NULL, "\n");
 		 number_line++;
 	}
-	//printf("%d\n",number_line);
+	printf("%d\n",number_line);
 }
 
 // max jingjing
 void max_data(void* pointer, int index_column) {
-	bool flag = false;   //check if detect any numerical cell
-
 	double max_value = helper((char *)pointer, index_column);
-	
 	int i = 1;
 	if(number_line == 0) num_rows(pointer);
 
@@ -284,37 +292,25 @@ void max_data(void* pointer, int index_column) {
 		pointer ++;
 		if(pointer !=NULL){
 			double value = helper((char *)pointer,index_column);
-			if(flag_with_h ==  true){
-				if(flag == true){
-					if(value > max_value) max_value = value;
-				}
-				else{
-					max_value = value;
-					flag = true;
-				}
-			}
+			if(value > max_value) max_value = value;
 		}
 		i ++;
 	}
-	if(flag){
-		if(flag_point == true)
-			printf("%.2f\n", floorf(max_value * 100) / 100);
-		else 
-			printf("%.0f\n", max_value);
-	}
-	exit(EXIT_FAILURE);
+	if(flag_point == true)
+		printf("%.2f\n", floorf(max_value * 100) / 100 );
+	else 
+		printf("%.0f\n", max_value);
 }
 
 // min jiaqian
 void min_data(void* pointer, int index_column) {
-
-	bool flag = false;   //check if detect any numerical cell
-
+	
 	double min_value = helper((char *)pointer, index_column);
 	
 	int i = 1;
 	if(number_line == 0) num_rows(pointer);
 
+
 	while( i< number_line) {
 		int j = 0;
         while(*(char *)pointer !='\n' && *(char *)pointer !='\0' ){
@@ -323,25 +319,14 @@ void min_data(void* pointer, int index_column) {
 		pointer ++;
 		if(pointer !=NULL){
 			double value = helper((char *)pointer,index_column);
-			if(flag_with_h ==  true){
-				if(flag == true){
-					if(value < min_value) min_value = value;
-				}
-				else{
-					min_value = value;
-					flag = true;
-				}
-			}
+			if(value < min_value) min_value = value;
 		}
 		i ++;
 	}
-	if(flag){
-		if(flag_point == true)
-			printf("%.2f\n", floorf(min_value * 100) / 100);
-		else 
-			printf("%.0f\n", min_value);
-	}
-	exit(EXIT_FAILURE);
+	if(flag_point == true)
+		printf("%.2f\n", floorf(min_value * 100) / 100);
+	else 
+		printf("%.0f\n", min_value);
 }
 
 double helper(char *cur, int index_column){
@@ -368,19 +353,13 @@ double helper(char *cur, int index_column){
 	while( cur[0] != '\0' && cur[0] != '\r' && cur[0] != '\n' && cur[0] != ',' ){
 		int a = cur[0]-'0';
 		if(a>9){
-			flag_with_h = false;
-			return 0;
+			exit(EXIT_FAILURE);
 		}
 		else{
 			if((a == -2 && flag_point == true ) || (a<0 && a!= -2)){
-				flag_with_h = false;
-				return 0;
+				exit(EXIT_FAILURE);
 			}
-			else if(a == -2) {
-				flag_point = true;
-				flag_with_h = true;
-			}
-			flag_with_h = true;
+			else if(a == -2) flag_point = true;
 		}
 		index_numbers++;
 		cur ++;
@@ -395,6 +374,7 @@ double helper(char *cur, int index_column){
 
 // mean haonan
 double mean_data(void* pointer, int index_column) {
+	printf("%s\n","Helllo");
     //get the data 
 	double field_value = helper((char *)pointer, index_column);
 
