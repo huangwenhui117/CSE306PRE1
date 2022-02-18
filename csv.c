@@ -260,7 +260,11 @@ int num_columns(void* pointer) {
 }
 
 // -r jiaqian
+<<<<<<< HEAD
 int num_rows(void* pointer) {
+=======
+void num_rows(void* pointer) {
+>>>>>>> f2db15e7455a401c0771cc25590a1015b9446873
 	char* c_pointer = (char *)pointer;
 	while (*c_pointer != '\0') {
 		if (*c_pointer == '\n') {
@@ -268,7 +272,10 @@ int num_rows(void* pointer) {
 		}
 		c_pointer++;		 
 	}
+<<<<<<< HEAD
 	return number_line;
+=======
+>>>>>>> f2db15e7455a401c0771cc25590a1015b9446873
 }
 
 // max jingjing
@@ -445,6 +452,7 @@ double mean_data(void* pointer, int index_column) {
 }
 
 bool read_col(char *token ,int index_column,char* target){
+
 	int quote = 0; 
 	int count =0;
 	int target_len = strlen(target);
@@ -482,16 +490,38 @@ bool read_col(char *token ,int index_column,char* target){
 // records jingjing
 char* find_data(void* pointer, int index_column, char* target) {
 	//printf("pointer is %s\n", (char *)pointer);
-	char *token = strtok(pointer, "\n");
+	//printf("------------------------------\n");
+	int count = 0; 
+	char* c_pointer = (char *)pointer;
+	char* copy_pointer = (char *)pointer;
 	
-	while( token != NULL ){
-		bool value = read_col(token, index_column, target);
+	if(number_line == 0) {
+		num_rows(pointer);
+	}
+	while (*c_pointer != '\0'){
+		while(*c_pointer != '\n' && *c_pointer != '\0' ){
+			count ++;
+			c_pointer++;
+		}
+		c_pointer++;
+		count ++;
+		char arr[count];
+		//printf("%d\n",count);
+		memcpy(arr, copy_pointer, count);
+		//printf("-----%s\n",arr);
+		bool value = read_col(arr, index_column, target);
 		
 		if (value) {
-			printf("%s\n",token);
+		
+			printf("%s\n",arr);
 		}
-		token = strtok(NULL, "\n");
+		memset(arr, '\0', count);
+		count = 0;
+		copy_pointer = c_pointer;
 	}
+
+
+	//printf("--%s\n", (char*)pointer);
 	return NULL;
 }
 
