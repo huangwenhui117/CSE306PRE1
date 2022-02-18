@@ -40,8 +40,7 @@ int main(int argc, char *argv[]) {
  	 * else, include header;
  	 **/
  	int header = 1;
- 	//int columns = num_columns(pointer);
- 	int columns = 8;
+ 	int columns = num_columns(pointer);
  	char *header_values;
  	char indexValue[50];
  	for (int i = 1; i < argc - 1; i++) {
@@ -63,11 +62,12 @@ int main(int argc, char *argv[]) {
  			continue;
  		}
  		if (argument_checker(argv[i]) == 2) {
+			printf("%d\n", columns);
  			continue;
  		}
  		if (argument_checker(argv[i]) == 3) {
- 			 num_rows(pointer);
-			 printf("%d\n",number_line);
+ 			num_rows(pointer);
+			printf("%d\n",number_line);
  			continue;
  		}
  		int index_column;
@@ -242,35 +242,37 @@ int index_columnName(char* nameArray, int exist_header, char* indexValue, int co
 int num_columns(void* pointer) {
 	int quote = 0; 
 	int count =0;
-	//printf("target_len is %d\n", target_len);
-	char *token = strtok(pointer, "\n");
-	while ( token[0] != '\0' && token[0] != '\n' && token[0] != '\r'){
-		if (quote%2==0 && token[0] == ','){
-			count ++;
+	char* c_pointer = (char *)pointer;
+	while (*c_pointer != '\n') {
+		if (quote % 2 == 0) {
+			if (*c_pointer == ',') {
+				count++;
+			}
+		} else {
+			if (*c_pointer == '\"') {
+				quote++;
+			}
 		}
-		if (token[0] == '\"' ){
-			quote +=1;
-		}
-		token ++;
+		c_pointer++;
 	}
+	count++;
 	return count;
 }
 
 // -r jiaqian
 void num_rows(void* pointer) {
-	char *token = strtok(pointer, "\n");
-
-	while (token != NULL) {
-         token = strtok(NULL, "\n");
-		 number_line++;
+	char* c_pointer = (char *)pointer;
+	while (*c_pointer != '\0') {
+		if (*c_pointer == '\n') {
+			number_line++;
+		}
+		c_pointer++;		 
 	}
-	//printf("%d\n",number_line);
 }
 
 // max jingjing
 void max_data(void* pointer, int index_column) {
 	bool flag = false;   //check if detect any numerical cell
-
 	double max_value = helper((char *)pointer, index_column);
 	
 	int i = 1;
