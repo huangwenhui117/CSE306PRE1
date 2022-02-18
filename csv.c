@@ -14,6 +14,7 @@ double mean_data(void* pointer, int index_column);
 char* find_data(void* pointer, int index_column, char* target);
 int str_cmp(char* str1, char* str2);
 bool flag_point;
+bool flag_with_h = false;
 
 int number_line = 0;
 
@@ -268,7 +269,10 @@ void num_rows(void* pointer) {
 
 // max jingjing
 void max_data(void* pointer, int index_column) {
+	bool flag = false;   //check if detect any numerical cell
+
 	double max_value = helper((char *)pointer, index_column);
+	
 	int i = 1;
 	if(number_line == 0) num_rows(pointer);
 
@@ -280,25 +284,37 @@ void max_data(void* pointer, int index_column) {
 		pointer ++;
 		if(pointer !=NULL){
 			double value = helper((char *)pointer,index_column);
-			if(value > max_value) max_value = value;
+			if(flag_with_h ==  true){
+				if(flag == true){
+					if(value > max_value) max_value = value;
+				}
+				else{
+					max_value = value;
+					flag = true;
+				}
+			}
 		}
 		i ++;
 	}
-	if(flag_point == true)
-		printf("%.2f\n", floorf(max_value * 100) / 100 );
-	else 
-		printf("%.0f\n", max_value);
+	if(flag){
+		if(flag_point == true)
+			printf("%.2f\n", floorf(max_value * 100) / 100);
+		else 
+			printf("%.0f\n", max_value);
+	}
+	exit(EXIT_FAILURE);
 }
 
 // min jiaqian
 void min_data(void* pointer, int index_column) {
-	
+
+	bool flag = false;   //check if detect any numerical cell
+
 	double min_value = helper((char *)pointer, index_column);
 	
 	int i = 1;
 	if(number_line == 0) num_rows(pointer);
 
-
 	while( i< number_line) {
 		int j = 0;
         while(*(char *)pointer !='\n' && *(char *)pointer !='\0' ){
@@ -307,14 +323,25 @@ void min_data(void* pointer, int index_column) {
 		pointer ++;
 		if(pointer !=NULL){
 			double value = helper((char *)pointer,index_column);
-			if(value < min_value) min_value = value;
+			if(flag_with_h ==  true){
+				if(flag == true){
+					if(value < min_value) min_value = value;
+				}
+				else{
+					min_value = value;
+					flag = true;
+				}
+			}
 		}
 		i ++;
 	}
-	if(flag_point == true)
-		printf("%.2f\n", floorf(min_value * 100) / 100);
-	else 
-		printf("%.0f\n", min_value);
+	if(flag){
+		if(flag_point == true)
+			printf("%.2f\n", floorf(min_value * 100) / 100);
+		else 
+			printf("%.0f\n", min_value);
+	}
+	exit(EXIT_FAILURE);
 }
 
 double helper(char *cur, int index_column){
@@ -341,13 +368,19 @@ double helper(char *cur, int index_column){
 	while( cur[0] != '\0' && cur[0] != '\r' && cur[0] != '\n' && cur[0] != ',' ){
 		int a = cur[0]-'0';
 		if(a>9){
-			exit(EXIT_FAILURE);
+			flag_with_h = false;
+			return 0;
 		}
 		else{
 			if((a == -2 && flag_point == true ) || (a<0 && a!= -2)){
-				exit(EXIT_FAILURE);
+				flag_with_h = false;
+				return 0;
 			}
-			else if(a == -2) flag_point = true;
+			else if(a == -2) {
+				flag_point = true;
+				flag_with_h = true;
+			}
+			flag_with_h = true;
 		}
 		index_numbers++;
 		cur ++;
